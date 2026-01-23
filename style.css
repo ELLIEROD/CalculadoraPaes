@@ -111,7 +111,6 @@ button:hover {
   height: auto;
 }
 
-/* Cores para o delta */
 .delta-vermelho {
   color: red;
 }
@@ -119,7 +118,6 @@ button:hover {
 .delta-azul {
   color: darkblue;
 }
-
 
 .assinatura {
   font-size: 13px;
@@ -130,9 +128,9 @@ button:hover {
 
 .relogio-digital {
   position: fixed;
-  top: 15px; /* Agora fica próximo ao topo */
+  top: 15px;
   padding: 12px 18px;
-  font-size: 22px; /* Aumentado para destacar melhor */
+  font-size: 22px;
   font-weight: bold;
   border-radius: 10px;
   background-color: #0071BC;
@@ -198,7 +196,6 @@ button:hover {
   font-size: 14px;
 }
 
-/* Botão no canto inferior direito */
 .dark-toggle {
   position: fixed;
   bottom: 10px;
@@ -219,7 +216,6 @@ button:hover {
   background: #555;
 }
 
-/* Camada escura sobre o fundo */
 #darkOverlay {
   position: fixed;
   top: 0;
@@ -233,7 +229,6 @@ button:hover {
   transition: opacity 0.4s ease;
 }
 
-/* Ativa o fundo escuro */
 body.dark-mode #darkOverlay {
   opacity: 0.55;
   pointer-events: none;
@@ -241,34 +236,34 @@ body.dark-mode #darkOverlay {
 }
 
 .shortcuts {
-            position: absolute;
-            bottom: 20px; /* Distância do fundo */
-            left: 20px; /* Distância da esquerda */
-            background-color: rgba(0, 0, 0, 0.7); /* Fundo semitransparente */
-            color: white;
-            padding: 15px;
-            font-family: 'Arial', sans-serif;
-            font-size: 16px;
-            border-radius: 10px;
-            width: 250px; /* Largura fixa para as notas */
-        }
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  border-radius: 10px;
+  width: 250px;
+}
 
-        .shortcuts h3 {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
+.shortcuts h3 {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
 
-        .shortcuts p {
-            margin: 5px 0;
-        }
+.shortcuts p {
+  margin: 5px 0;
+}
 
-        .shortcuts strong {
-            font-weight: bold;
-        }
+.shortcuts strong {
+  font-weight: bold;
+}
 
 /* =========================
-   AJUSTES PARA MOBILE
+   AJUSTES PARA MOBILE (CORRIGIDO)
    ========================= */
 @media (max-width: 768px) {
 
@@ -279,63 +274,66 @@ body.dark-mode #darkOverlay {
 
   .container {
     width: 100%;
-    padding: 20px 15px;
+    padding: 15px 10px;
     border-radius: 8px;
+    box-sizing: border-box;
   }
 
   h1 {
-    font-size: 1.4em;
+    font-size: 1.3em;
   }
 
   h2 {
-    font-size: 1.1em;
+    font-size: 1.0em;
   }
 
-  /* Mantém Frios e Quentes lado a lado */
+  /* Mantém as 4 colunas em linha */
   .input-group {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: auto 1fr auto 1fr; 
+    gap: 6px; 
+    margin-bottom: 10px;
   }
 
   .input-group label {
-    font-size: 0.85em;
+    font-size: 0.75em;
+    white-space: nowrap;
   }
 
   .input-group input[type="number"] {
-    font-size: 1em;
-    padding: 10px;
+    font-size: 0.9em;
+    padding: 8px 4px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   button {
     width: 100%;
-    font-size: 1em;
-    padding: 12px;
-    margin: 6px 0;
+    font-size: 0.95em;
+    padding: 10px;
+    margin: 4px 0;
   }
 
   .resultados {
-    font-size: 1em;
+    font-size: 0.95em;
   }
 
-  /* Relógios menores no mobile */
   .relogio-digital {
-    font-size: 16px;
-    padding: 8px 12px;
-  }
-
-  /* Aba de data mais compacta */
-  .aba-data {
     font-size: 14px;
     padding: 6px 10px;
+    top: 10px;
   }
 
-  /* Logos menores */
+  .aba-data {
+    font-size: 13px;
+    padding: 5px 8px;
+    top: 55px;
+  }
+
   .logo-container img {
-    max-width: 55px;
+    max-width: 45px;
   }
 
-  /* Esconde atalhos no mobile (opcional) */
   .shortcuts {
     display: none;
   }
