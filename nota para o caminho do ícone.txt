@@ -1,0 +1,4 @@
+nota para o caminho do ícone. trocar o caminho depois do files/// se necessário:
+
+
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --app=file:///C:\Users\kiosko.bb\Documents\Temperatura\index.html
