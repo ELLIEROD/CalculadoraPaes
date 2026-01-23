@@ -22,22 +22,26 @@ const deltaSpan = document.getElementById('delta');
 
 // Aplica a lógica de navegação vertical e teclado otimizado
 allInputFields.forEach(input => {
-  // Otimização para teclado mobile (força teclado numérico com separador decimal)
+  // Força o teclado numérico otimizado
   input.setAttribute('inputmode', 'decimal');
 
   input.addEventListener('keydown', function (event) {
+    // Captura Enter ou Tab (ou o botão "Próximo" do teclado mobile)
     if (event.key === 'Enter' || event.key === 'Tab') {
-      event.preventDefault(); // Impede o salto lateral padrão do mobile
+      event.preventDefault();
       
       const nextId = inputFields[this.id];
       if (nextId) {
         const nextElement = document.getElementById(nextId);
         if (nextElement) {
-          nextElement.focus();
-          // Seleciona o texto existente para facilitar a correção rápida
-          if (nextElement.tagName === 'INPUT') {
-            nextElement.select(); 
-          }
+          // O segredo para mobile: um micro-atraso garante que o sistema 
+          // permita a mudança de foco manual
+          setTimeout(() => {
+            nextElement.focus();
+            if (nextElement.tagName === 'INPUT') {
+              nextElement.select(); 
+            }
+          }, 20);
         }
       }
     }
@@ -194,3 +198,4 @@ toggleButton.addEventListener('click', () => {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
+
