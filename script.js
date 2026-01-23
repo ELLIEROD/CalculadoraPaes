@@ -20,15 +20,24 @@ const mediaFriosSpan = document.getElementById('mediaFrios');
 const mediaQuentesSpan = document.getElementById('mediaQuentes');
 const deltaSpan = document.getElementById('delta');
 
+// Aplica a lógica de navegação vertical e teclado otimizado
 allInputFields.forEach(input => {
+  // Otimização para teclado mobile (força teclado numérico com separador decimal)
+  input.setAttribute('inputmode', 'decimal');
+
   input.addEventListener('keydown', function (event) {
     if (event.key === 'Enter' || event.key === 'Tab') {
-      event.preventDefault();
+      event.preventDefault(); // Impede o salto lateral padrão do mobile
+      
       const nextId = inputFields[this.id];
       if (nextId) {
         const nextElement = document.getElementById(nextId);
         if (nextElement) {
           nextElement.focus();
+          // Seleciona o texto existente para facilitar a correção rápida
+          if (nextElement.tagName === 'INPUT') {
+            nextElement.select(); 
+          }
         }
       }
     }
@@ -78,15 +87,14 @@ function zerarTudo() {
   deltaSpan.textContent = '';
   deltaSpan.classList.remove('delta-vermelho', 'delta-azul');
   resultadosDiv.style.display = 'none';
+  document.getElementById('frio1').focus();
 }
 
 function zerarQuentes() {
   for (let i = 1; i <= 6; i++) {
     document.getElementById(`quente${i}`).value = '';
   }
-
   const valoresFrios = [...Array(6)].map((_, i) => parseFloat(document.getElementById(`frio${i + 1}`).value));
-
   if (valoresFrios.some(isNaN)) {
     mediaFriosSpan.textContent = '';
     resultadosDiv.style.display = 'none';
@@ -95,10 +103,10 @@ function zerarQuentes() {
     mediaFriosSpan.textContent = mediaFrios.toFixed(1);
     resultadosDiv.style.display = 'block';
   }
-
   mediaQuentesSpan.textContent = '';
   deltaSpan.textContent = '';
   deltaSpan.classList.remove('delta-vermelho', 'delta-azul');
+  document.getElementById('quente1').focus();
 }
 
 function atualizarRelogio() {
@@ -119,7 +127,6 @@ setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
 const abaData = document.getElementById("abaData");
-const painelClaves = document.getElementById("painelClaves");
 const seletorProduto = document.getElementById("seletorProduto");
 const dataHojeCompacta = document.getElementById("dataHojeCompacta");
 const diaSemanaSpan = document.getElementById("diaSemana");
@@ -140,16 +147,14 @@ function atualizarPainelClaves() {
   const yyyy = hoje.getFullYear();
   const diaJuliano = Math.floor((hoje - new Date(hoje.getFullYear(), 0, 0)) / 86400000);
 
-  // Validade e retirada por produto
   const validadeDias = produto === "pppi" ? 50 :
                      produto === "artesanos" ? 35 :
                      produto === "aparas" ? 15 : 0;
 
-const retiradaDias = produto === "pppi" ? 30 :
+  const retiradaDias = produto === "pppi" ? 30 :
                      produto === "artesanos" ? 23 :
                      produto === "aparas" ? 12 : 0;
 
-  
   const dataValidade = new Date(hoje);
   dataValidade.setDate(hoje.getDate() + validadeDias);
   const validadeFormatada = dataValidade.toLocaleDateString("pt-BR");
@@ -159,29 +164,23 @@ const retiradaDias = produto === "pppi" ? 30 :
   const retiradaFormatada = dataRetirada.getDate().toString().padStart(2, '0') + " " +
                             (dataRetirada.getMonth() + 1).toString().padStart(2, '0');
 
-  // Atualiza painel
   dataHojeCompacta.textContent = `${dd}/${mm}/${yyyy}`;
   diaSemanaSpan.textContent = diaSemana;
   dataAtualSpan.textContent = `${dd}/${mm}/${yyyy}`;
-  dataJulianaSpan.textContent = diaJuliano.toString().padStart(3, '0');
+  dataJulianaSpan.textContent = diaJuliano.toString().padStart(3, '0').slice(-3);
   dataValidadeSpan.textContent = validadeFormatada;
   dataRetiradaSpan.textContent = retiradaFormatada;
 }
 
 seletorProduto.addEventListener("change", atualizarPainelClaves);
-
-// Alternar expansão por clique
 abaData.addEventListener("click", () => {
   abaData.classList.toggle("expandida");
   atualizarPainelClaves();
 });
 
-// Atualizar ao carregar
 atualizarPainelClaves();
 
 const toggleButton = document.getElementById('toggleDarkMode');
-
-// Aplicar modo salvo
 if (localStorage.getItem('darkMode') === 'enabled') {
   document.body.classList.add('dark-mode');
 }
