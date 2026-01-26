@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calculadora de Médias</title>
+  <title>Temperatura de Pães</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="img/ico-192.png" type="image/png">
   <link rel="manifest" href="manifest.json">
@@ -15,12 +15,12 @@
     <div class="assinatura" style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px;">
     Created by Ellie Rod • ID 50000833
   </div>
-    <h1>Calculadora de Médias</h1>
+    <h1>Calculadora de Médias e Delta</h1>
     <h2>Insira os Valores</h2>
 
     <div class="input-group">
-      <label>Frios</label><span></span>
-      <label>Quentes</label><span></span>
+      <label>❄️ Frios:</label><span></span>
+      <label>🔥 Quentes:</label><span></span>
     </div>
 
     <div class="input-group">
@@ -78,16 +78,24 @@
 
   <div class="aba-data" id="abaData">
     📅 <span id="dataHojeCompacta"></span>
+    
     <div class="painel-claves" id="painelClaves">
+      <label for="seletorLinha"><strong>Linha:</strong></label>
+      <select id="seletorLinha">
+        <option value="linha20k">Linha 20k</option>
+        <option value="linha3">Linha 3</option>
+        <option value="bolleria">Bolleria</option>
+      </select>
+
       <label for="seletorProduto"><strong>Produto:</strong></label>
       <select id="seletorProduto">
-        <option value="pppi">PP e PI</option>
-        <option value="artesanos">Artesanos</option>
-        <option value="aparas">Aparas</option>
-      </select>
+        </select>
+
+      <hr style="border: 0; border-top: 1px solid #ddd; margin: 10px 0;">
+
       <p> <span id="diaSemana"></span></p>
       <p><strong>Data Atual:</strong> <span id="dataAtual"></span></p>
-      <p><strong>Data Juliana:</strong> <span id="dataJuliana"></span></p>
+      <p><strong>Data Juliano:</strong> <span id="dataJuliana"></span></p>
       <p><strong>Validade:</strong> <span id="dataValidade"></span></p>
       <p><strong>Retirada:</strong> <span id="dataRetirada"></span></p>
     </div>
@@ -105,14 +113,9 @@
     <p><strong>Ctrl + Tab</strong> = Mudar de Aba</p>
     <p><strong>Tab + Alt</strong> = Mudar de Programas</p>
     <p><strong>F11</strong> = Colocar ou Tirar Tela Cheia</p>
-    <p><strong>Ctrl + Alt + R</strong> = Abrir Relógio da Bimbo</p>
-    <p><strong>Ctrl + Alt + T</strong> = Abrir Programa de Temperatura de Pães</p>
-    <p><strong>Ctrl + Alt + B</strong> = Abrir Apdata Bimbo</p>
+    
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
