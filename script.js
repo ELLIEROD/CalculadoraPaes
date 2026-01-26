@@ -1,3 +1,36 @@
+/* ===========================================================
+   CONFIGURAÇÃO DE LINHAS E PRODUTOS (EDITE AS DATAS AQUI)
+   =========================================================== */
+const dadosProducao = {
+  "linha20k": {
+    nome: "Linha 20k",
+    produtos: {
+      "pppi": { label: "PP e PI", validade: 50, retirada: 30 },
+      "artesanos": { label: "Artesanos", validade: 35, retirada: 23 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+    }
+  },
+  "linha3": {
+    nome: "Linha 3",
+    produtos: {
+      "paesEspeciais": { label: "Pães Especiais", validade: 35, retirada: 23 }, 
+      "paesintegraise12graos": { label: "Pão Integral Zero e 12 Grãos 350g", validade: 28, retirada: 19 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+    }
+  },
+  "bolleria": {
+    nome: "Bolleria",
+    produtos: {
+      "brioche": { label: "Brioche", validade: 60, retirada: 45 }, 
+      "artesanos": { label: "Artesanos", validade: 35, retirada: 23 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+    }
+  }
+};
+
+/* ===========================================================
+   LÓGICA DE NAVEGAÇÃO E CÁLCULO DE MÉDIAS
+   =========================================================== */
 const inputFields = {
   'frio1': 'frio2',
   'frio2': 'frio3',
@@ -20,13 +53,11 @@ const mediaFriosSpan = document.getElementById('mediaFrios');
 const mediaQuentesSpan = document.getElementById('mediaQuentes');
 const deltaSpan = document.getElementById('delta');
 
-// Aplica a lógica de navegação vertical e teclado otimizado
+// Aplica a lógica de navegação vertical e teclado otimizado (Mobile Fix)
 allInputFields.forEach(input => {
-  // Força o teclado numérico otimizado
   input.setAttribute('inputmode', 'decimal');
 
   input.addEventListener('keydown', function (event) {
-    // Captura Enter ou Tab (ou o botão "Próximo" do teclado mobile)
     if (event.key === 'Enter' || event.key === 'Tab') {
       event.preventDefault();
       
@@ -34,8 +65,7 @@ allInputFields.forEach(input => {
       if (nextId) {
         const nextElement = document.getElementById(nextId);
         if (nextElement) {
-          // O segredo para mobile: um micro-atraso garante que o sistema 
-          // permita a mudança de foco manual
+          // O segredo para mobile: micro-atraso
           setTimeout(() => {
             nextElement.focus();
             if (nextElement.tagName === 'INPUT') {
@@ -130,8 +160,13 @@ function atualizarRelogio() {
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
+/* ===========================================================
+   LÓGICA DO PAINEL DE CLAVES (SELETORES DINÂMICOS)
+   =========================================================== */
 const abaData = document.getElementById("abaData");
+const seletorLinha = document.getElementById("seletorLinha");
 const seletorProduto = document.getElementById("seletorProduto");
+
 const dataHojeCompacta = document.getElementById("dataHojeCompacta");
 const diaSemanaSpan = document.getElementById("diaSemana");
 const dataAtualSpan = document.getElementById("dataAtual");
@@ -141,28 +176,56 @@ const dataRetiradaSpan = document.getElementById("dataRetirada");
 
 const diasSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
-function atualizarPainelClaves() {
+// Preenche o Select de Produtos baseado na Linha escolhida
+function popularSelectProdutos() {
+  const linhaSelecionada = seletorLinha.value;
+  const listaProdutos = dadosProducao[linhaSelecionada].produtos;
+
+  // Limpa as opções atuais
+  seletorProduto.innerHTML = "";
+
+  // Cria as novas opções
+  for (let chave in listaProdutos) {
+    const option = document.createElement("option");
+    option.value = chave;
+    option.textContent = listaProdutos[chave].label;
+    seletorProduto.appendChild(option);
+  }
+  
+  // Atualiza os cálculos imediatamente após mudar a lista
+  atualizarCalculosDatas();
+}
+
+function atualizarCalculosDatas() {
   const hoje = new Date();
-  const produto = seletorProduto.value;
+  
+  const linhaVal = seletorLinha.value;
+  const prodVal = seletorProduto.value;
+  
+  // Proteção contra leitura de dados inexistentes durante troca
+  if (!dadosProducao[linhaVal] || !dadosProducao[linhaVal].produtos[prodVal]) return;
+
+  const dados = dadosProducao[linhaVal].produtos[prodVal];
+  const validadeDias = dados.validade;
+  const retiradaDias = dados.retirada;
 
   const diaSemana = diasSemana[hoje.getDay()];
   const dd = hoje.getDate().toString().padStart(2, '0');
   const mm = (hoje.getMonth() + 1).toString().padStart(2, '0');
   const yyyy = hoje.getFullYear();
-  const diaJuliano = Math.floor((hoje - new Date(hoje.getFullYear(), 0, 0)) / 86400000);
+  
+  // Cálculo Data Juliana
+  const start = new Date(hoje.getFullYear(), 0, 0);
+  const diff = hoje - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const diaJuliano = Math.floor(diff / oneDay);
 
-  const validadeDias = produto === "pppi" ? 50 :
-                     produto === "artesanos" ? 35 :
-                     produto === "aparas" ? 15 : 0;
-
-  const retiradaDias = produto === "pppi" ? 30 :
-                     produto === "artesanos" ? 23 :
-                     produto === "aparas" ? 12 : 0;
-
+  // Cálculo Validade
   const dataValidade = new Date(hoje);
   dataValidade.setDate(hoje.getDate() + validadeDias);
   const validadeFormatada = dataValidade.toLocaleDateString("pt-BR");
 
+  // Cálculo Retirada (Formato DD MM)
   const dataRetirada = new Date(hoje);
   dataRetirada.setDate(hoje.getDate() + retiradaDias);
   const retiradaFormatada = dataRetirada.getDate().toString().padStart(2, '0') + " " +
@@ -176,14 +239,24 @@ function atualizarPainelClaves() {
   dataRetiradaSpan.textContent = retiradaFormatada;
 }
 
-seletorProduto.addEventListener("change", atualizarPainelClaves);
-abaData.addEventListener("click", () => {
+// Event Listeners dos seletores
+seletorLinha.addEventListener("change", popularSelectProdutos);
+seletorProduto.addEventListener("change", atualizarCalculosDatas);
+
+// Lógica de abrir/fechar o painel
+abaData.addEventListener("click", (e) => {
+  // Impede que o painel feche se o usuário clicar dentro dos seletores
+  if(e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+  
   abaData.classList.toggle("expandida");
-  atualizarPainelClaves();
+  if (abaData.classList.contains("expandida")) {
+      atualizarCalculosDatas(); 
+  }
 });
 
-atualizarPainelClaves();
-
+/* ===========================================================
+   DARK MODE & SERVICE WORKER
+   =========================================================== */
 const toggleButton = document.getElementById('toggleDarkMode');
 if (localStorage.getItem('darkMode') === 'enabled') {
   document.body.classList.add('dark-mode');
@@ -199,3 +272,6 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
 
+// Inicializa o painel na primeira carga
+popularSelectProdutos();
+atualizarCalculosDatas();
