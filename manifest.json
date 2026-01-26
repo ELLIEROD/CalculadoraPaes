@@ -1,6 +1,6 @@
 {
   "name": "Temperatura de Pães",
-  "short_name": "CalcMedias",
+  "short_name": "TempPaes",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -20,4 +20,5 @@
     }
   ]
 }
+
 
