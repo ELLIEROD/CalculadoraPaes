@@ -6,20 +6,43 @@
   "display": "standalone",
   "background_color": "#F0E68C",
   "theme_color": "#0071BC",
-  "icons": [
+ "icons": [
     {
-      "src": "./img/ico-192.png",
+      "src": "img/ico-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./img/ico-512.png",
+      "src": "img/ico-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/ico-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "img/screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tela principal no Celular"
+    },
+    {
+      "src": "img/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tela principal no Computador"
+    }
+  ],
 }
+
 
 
