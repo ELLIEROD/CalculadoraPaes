@@ -1,6 +1,7 @@
 {
   "name": "Temperatura de Pães",
   "short_name": "Temp Pães",
+  "description": "Calculadora de médias de temperatura e controle de datas de validade e retirada para produção de pães.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F0E68C",
@@ -20,4 +21,5 @@
     }
   ]
 }
+
 
