@@ -1,6 +1,6 @@
 {
-  "id": "/CalculadoraPaes/",
   "name": "Temperatura de Pães",
+  "id": "/CalculadoraPaes/",
   "short_name": "Temp Pães",
   "description": "Calculadora de médias de temperatura e controle de datas de validade e retirada para produção de pães.",
   "orientation": "portrait",
@@ -45,6 +45,7 @@
     }
   ],
 }
+
 
 
 
