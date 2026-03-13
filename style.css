@@ -264,11 +264,22 @@ body.dark-mode #darkOverlay {
 /* =========================
    AJUSTES PARA MOBILE
    ========================= */
+
 @media (max-width: 768px) {
 
+  /* 1. Remove elementos desnecessários no mobile */
+  .dark-toggle, 
+  #toggleDarkMode, 
+  .shortcuts, 
+  #darkOverlay {
+    display: none !important;
+  }
+
+  /* 2. Ajuste do corpo para não amontoar */
   body {
     padding: 10px;
-    align-items: flex-start;
+    align-items: flex-start; /* Começa do topo no celular */
+    padding-top: 150px; /* Dá espaço para os relógios e abas fixas */
   }
 
   .container {
@@ -328,7 +339,89 @@ body.dark-mode #darkOverlay {
     top: 55px;
   }
 
-  .shortcuts {
-    display: none;
+  
+}
+
+/* Estilo para a nova aba da Direita */
+.aba-lote {
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    background-color: #F0E68C; /* Cor fixa para evitar erro de variável */
+    color: #000;
+    padding: 8px 12px;
+    font-size: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+ 
+
+.painel-lote {
+  display: none;
+  position: absolute;
+  top: 45px;
+  right: 0; /* Alinha o painel para abrir para a esquerda */
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  min-width: 260px;
+  color: #333;
+  text-align: left;
+}
+
+/* Mostrar ao passar o mouse ou clicar (via JS) */
+.aba-lote:hover .painel-lote,
+.aba-lote.expandida .painel-lote {
+  display: block;
+}
+
+.painel-lote label {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.painel-lote select {
+  width: 100%;
+  padding: 5px;
+  margin-top: 4px;
+}
+
+/* Visual do Lote Estilo Impressora Industrial */
+.visualizacao-lote {
+  background: #0030;
+  color: var(--inkjet-green); /* Verde limão */
+  padding: 12px;
+  margin-top: 15px;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  border: 2px solid #333;
+}
+
+.lote-linhas {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+#loteRetiradaGrande {
+  font-size: 22px;
+  font-weight: bold;
+  border-left: 1px solid #444;
+  padding-left: 10px;
+}
+
+/* Ajuste mobile */
+@media (max-width: 768px) {
+  .aba-lote {
+    top: 55px; /* Abaixo da outra no mobile */
+    font-size: 14px;
   }
 }
