@@ -13,7 +13,7 @@
 
   <div class="container">
     <div class="assinatura" style="margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px;">
-    Created by Ellie Rod • ID 50000833 <p> Versão 2.1</p>
+    Created by Ellie Rod • ID 50000833 <p> Versão 3.0</p>
   </div>
     <h1>Calculadora de Médias e Delta</h1>
     <h2>Insira os Valores</h2>
@@ -77,29 +77,47 @@
   </div>
 
   <div class="aba-data" id="abaData">
-    📅 <span id="dataHojeCompacta"></span>
-    
-    <div class="painel-claves" id="painelClaves">
-      <label for="seletorLinha"><strong>Linha:</strong></label>
-      <select id="seletorLinha">
-        <option value="linha20k">Linha 20k</option>
-        <option value="linha3">Linha 3</option>
-        <option value="bolleria">Bolleria</option>
-      </select>
+  📅 <span id="dataHojeCompacta"></span>
+  <div class="painel-claves" id="painelClaves">
+    <label for="seletorLinha"><strong>Linha:</strong></label>
+    <select id="seletorLinha">
+      <option value="linha20k">Linha 4 - 20k</option>
+      <option value="linha3">Linha 3</option>
+      <option value="bolleria">Linha 1 - Bolleria</option>
+    </select>
 
-      <label for="seletorProduto"><strong>Produto:</strong></label>
-      <select id="seletorProduto">
-        </select>
+    <label for="seletorProduto"><strong>Produto:</strong></label>
+    <select id="seletorProduto"></select>
 
-      <hr style="border: 0; border-top: 1px solid #ddd; margin: 10px 0;">
-
-      <p> <span id="diaSemana"></span></p>
-      <p><strong>Data Atual:</strong> <span id="dataAtual"></span></p>
-      <p><strong>Data Juliano:</strong> <span id="dataJuliana"></span></p>
-      <p><strong>Validade:</strong> <span id="dataValidade"></span></p>
-      <p><strong>Retirada:</strong> <span id="dataRetirada"></span></p>
-    </div>
+    <hr style="border: 0; border-top: 1px solid #ddd; margin: 10px 0;">
+    <p><strong>Data Atual:</strong> <span id="dataAtual"></span></p>
+    <p><strong>Data Juliano:</strong> <span id="dataJuliana"></span></p>
+    <p><strong>Validade:</strong> <span id="dataValidade"></span></p>
+    <p><strong>Retirada:</strong> <span id="dataRetirada"></span></p>
   </div>
+</div>
+
+<div class="aba-lote" id="abaLote">
+  🏷️ Comparar Lote
+  <div class="painel-lote" id="painelLoteContent">
+    <label><strong>Unidade:</strong></label>
+    <select id="seletorUnidade">
+      <option value="SP2">SP2 - Mogi</option>
+    </select>
+
+    <label><strong>Máquina:</strong></label>
+    <select id="seletorMaquina"></select>
+
+    <div class="visualizacao-lote">
+      <div class="lote-linhas">
+        <div id="loteLinhaSuperior">VAL 00 MMM 00</div>
+        <div id="loteLinhaInferior">LSP200000000</div>
+      </div>
+      <div id="loteRetiradaGrande">0000</div>
+    </div>
+    <p style="font-size: 10px; margin-top: 10px; color: #666;">* Atualiza automaticamente conforme o produto selecionado na esquerda.</p>
+  </div>
+</div>
 
   <div class="relogio-digital invertido" id="relogioDireita">
     🕒 <span id="horaDireita"></span>
@@ -108,14 +126,7 @@
   <button id="toggleDarkMode" class="dark-toggle">🌙</button>
   <div id="darkOverlay"></div>
 
-  <div class="shortcuts">
-    <h3>Atalhos</h3>
-    <p><strong>Ctrl + F5</strong> = Forçar Atualização</p>
-    <p><strong>Ctrl + Tab</strong> = Mudar de Aba</p>
-    <p><strong>Tab + Alt</strong> = Mudar de Programas</p>
-    <p><strong>F11</strong> = Colocar ou Tirar Tela Cheia</p>
-    
-  </div>
+  
 
   <script src="script.js"></script>
   <script>
