@@ -1,4 +1,4 @@
-const CACHE_NAME = 'temp-paes-v3'; // Versão nova para limpar o erro anterior
+const CACHE_NAME = 'temp-paes-v3.0'; // Versão nova para limpar o erro anterior
 const assets = [
   './',
   './index.html',
