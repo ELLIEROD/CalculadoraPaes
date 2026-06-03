@@ -5,25 +5,25 @@ const dadosProducao = {
   "linha20k": {
     nome: "Linha 20k",
     produtos: {
-      "pppi": { label: "PP e PI", validade: 50, retirada: 30 },
-      "artesanos": { label: "Artesanos", validade: 35, retirada: 23 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+      "pppi": { label: "PP e PI", validade: 50, retirada: 35, envio: 10 },
+      "artesanos": { label: "Artesanos", validade: 35, retirada: 23, envio: 09 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
     }
   },
   "linha3": {
     nome: "Linha 3",
     produtos: {
-      "paesEspeciais": { label: "Pães Especiais", validade: 35, retirada: 23 }, 
-      "paesintegraise12graos": { label: "Pão Integral Zero e 12 Grãos 350g", validade: 28, retirada: 19 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+      "paesEspeciais": { label: "Pães Especiais", validade: 35, retirada: 23, envio: 10 }, 
+      "paesintegraise12graos": { label: "Pão Integral Zero e 12 Grãos 350g", validade: 28, retirada: 19, envio: 10 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
     }
   },
   "bolleria": {
     nome: "Bolleria",
     produtos: {
-      "brioche": { label: "Brioche", validade: 60, retirada: 45 }, 
-      "artesanos": { label: "Artesanos", validade: 35, retirada: 23 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12 }
+      "brioche": { label: "Brioche", validade: 60, retirada: 45, envio: 10 }, 
+      "artesanos": { label: "Artesanos", validade: 35, retirada: 23, envio: 10 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
     }
   }
 };
@@ -48,10 +48,13 @@ const dataHojeCompacta = document.getElementById("dataHojeCompacta");
 const dataJulianaSpan = document.getElementById("dataJuliana");
 const dataValidadeSpan = document.getElementById("dataValidade");
 const dataRetiradaSpan = document.getElementById("dataRetirada");
+const dataEnvioSpan = document.getElementById("dataEnvio");
 
 const loteLinhaSuperior = document.getElementById("loteLinhaSuperior");
 const loteLinhaInferior = document.getElementById("loteLinhaInferior");
 const loteRetiradaGrande = document.getElementById("loteRetiradaGrande");
+const loteEnvioGrande = document.getElementById("loteEnvioGrande");
+
 
 const abaData = document.getElementById("abaData");
 const abaLote = document.getElementById("abaLote");
@@ -64,19 +67,46 @@ const inputFields = {
   'quente1': 'quente2', 'quente2': 'quente3', 'quente3': 'quente4', 'quente4': 'quente5', 'quente5': 'quente6', 'quente6': 'calcularMedias'
 };
 
+// Cria automaticamente o mapeamento inverso para voltar os campos
+const previousFields = {};
+Object.keys(inputFields).forEach(currentId => {
+  const nextId = inputFields[currentId];
+  previousFields[nextId] = currentId; // O próximo campo agora aponta para o anterior
+});
+
 document.querySelectorAll('input[type="number"]').forEach(input => {
   input.setAttribute('inputmode', 'decimal');
+  
   input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      e.preventDefault();
-      const nextId = inputFields[this.id];
-      if (nextId) {
-        const nextEl = document.getElementById(nextId);
-        setTimeout(() => { nextEl.focus(); if(nextEl.tagName === 'INPUT') nextEl.select(); }, 20);
+    const isEnter = e.key === 'Enter';
+    const isTab = e.key === 'Tab';
+
+    if (isEnter || isTab) {
+      e.preventDefault(); 
+      let targetId = null;
+
+      if (e.shiftKey) {
+               targetId = previousFields[this.id];
+      } else {
+        
+        targetId = inputFields[this.id];
+      }
+
+      if (targetId) {
+        const nextEl = document.getElementById(targetId);
+        if (nextEl) {
+          setTimeout(() => { 
+            nextEl.focus(); 
+            if (nextEl.tagName === 'INPUT' && typeof nextEl.select === 'function') {
+              nextEl.select(); 
+            }
+          }, 20);
+        }
       }
     }
   });
 });
+
 
 document.getElementById('calcularMedias').addEventListener('click', calcularMedias);
 
@@ -144,14 +174,16 @@ function atualizarCalculosDatas() {
     const diaJuliano = Math.floor(diff / (1000 * 60 * 60 * 24));
     dataJulianaSpan.textContent = diaJuliano.toString().padStart(3, '0');
 
-    // Validade e Retirada
+    // Validade, Retirada e Envio
     const dVal = new Date(hoje); dVal.setDate(hoje.getDate() + info.validade);
     const dRet = new Date(hoje); dRet.setDate(hoje.getDate() + info.retirada);
+    const dEnv = new Date(hoje); dEnv.setDate(hoje.getDate() + info.envio); 
     
     dataHojeCompacta.textContent = hoje.toLocaleDateString("pt-BR");
     document.getElementById("dataAtual").textContent = hoje.toLocaleDateString("pt-BR");
     dataValidadeSpan.textContent = dVal.toLocaleDateString("pt-BR");
     dataRetiradaSpan.textContent = dRet.getDate().toString().padStart(2, '0') + " " + (dRet.getMonth()+1).toString().padStart(2, '0');
+    dataEnvioSpan.textContent = dEnv.getDate().toString().padStart(2, '0') + " " + (dEnv.getMonth()+1).toString().padStart(2, '0');
     
     // Integração: Atualiza o lote sempre que a data/produto mudar
     gerarStringLote();
@@ -180,24 +212,39 @@ function gerarStringLote() {
 
     // Retirada para o quadro grande
     const dRet = new Date(hoje); dRet.setDate(hoje.getDate() + info.retirada);
-    const strRetiradaGrande = dRet.getDate().toString().padStart(2, '0') + (dRet.getMonth()+1).toString().padStart(2, '0');
+    const strRetiradaGrande = `DR ${dRet.getDate().toString().padStart(2, '0') + (dRet.getMonth()+1).toString().padStart(2, '0')}`;
+const dEnv = new Date(hoje); dEnv.setDate(hoje.getDate() + info.envio);
+    const strEnvioGrande = `DE ${dEnv.getDate().toString().padStart(2, '0') + (dEnv.getMonth()+1).toString().padStart(2, '0')}`;
 
     loteLinhaSuperior.textContent = strVal;
     loteLinhaInferior.textContent = strLote;
     loteRetiradaGrande.textContent = strRetiradaGrande;
+    loteEnvioGrande.textContent = strEnvioGrande;
 }
 
 /* ===========================================================
-   RELÓGIO E EVENTOS
-   =========================================================== */
+   RELÓGIO E EVENTOS
+   =========================================================== */
+let diaAtualNaMemoria = new Date().getDate(); // <-- ADICIONE ESTA LINHA
+
 function atualizarRelogio() {
-    const h = new Date().toLocaleTimeString("pt-BR");
-    if(document.getElementById("horaEsquerda")) document.getElementById("horaEsquerda").textContent = h;
-    if(document.getElementById("horaDireita")) document.getElementById("horaDireita").textContent = h;
-    if(new Date().getSeconds() === 0) gerarStringLote(); 
+    const agora = new Date(); // <-- MUDAMOS DE "new Date().toLocaleTimeString" PARA PEGAR O OBJETO COMPLETO
+    
+    const h = agora.toLocaleTimeString("pt-BR");
+    if(document.getElementById("horaEsquerda")) document.getElementById("horaEsquerda").textContent = h;
+    if(document.getElementById("horaDireita")) document.getElementById("horaDireita").textContent = h;
+    
+    // VIGILANTE DE DATA: Se o dia virou com o programa aberto
+    if (agora.getDate() !== diaAtualNaMemoria) {
+        diaAtualNaMemoria = agora.getDate(); 
+        atualizarCalculosDatas(); // Atualiza tudo automaticamente!
+    } 
+    // Se o dia for o mesmo, mantém sua lógica original para o minuto do lote
+    else if(agora.getSeconds() === 0) {
+        gerarStringLote(); 
+    }
 }
 setInterval(atualizarRelogio, 1000);
-
 // Eventos de Interface
 seletorLinha.addEventListener("change", popularSelectProdutos);
 seletorProduto.addEventListener("change", atualizarCalculosDatas);
