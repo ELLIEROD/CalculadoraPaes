@@ -29,9 +29,9 @@ const dadosProducao = {
 };
 
 const maquinasPorLinha = {
-    "linha20k": [1, 2, 3, 4, 5, 6],
-    "linha3": [1, 2, 3],
-    "bolleria": [1, 2, 3, 4]
+    "linha20k": ["01", "02", "03", "04", "05", "06"],
+    "linha3": ["01", "02", "03"],
+    "bolleria": ["01", "02", "03", "04"]
 };
 
 const mesesAbrev = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
