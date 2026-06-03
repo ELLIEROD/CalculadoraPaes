@@ -411,8 +411,14 @@ body.dark-mode #darkOverlay {
   line-height: 1.2;
 }
 
-#loteRetiradaGrande {
-  font-size: 22px;
+.loteRetiradaGrande {
+  font-size: 14px;
+  font-weight: bold;
+  border-left: 1px solid #444;
+  padding-left: 10px;
+}
+.loteEnvioGrande {
+  font-size: 14px;
   font-weight: bold;
   border-left: 1px solid #444;
   padding-left: 10px;
