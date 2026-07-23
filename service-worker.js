@@ -9,8 +9,8 @@ const assets = [
   './manifest.json',
   './img/background.jfif',
   './img/bimbo2.png',
-  './img/ico-192.png',
-  './img/ico-512.png'
+  './img/icon-192.png',
+  './img/icon-512.png'
 ];
 
 // Instalação - Salva tudo no cache imediatamente
