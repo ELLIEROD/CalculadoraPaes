@@ -6,8 +6,8 @@ const dadosProducao = {
     nome: "Linha 20k",
     produtos: {
       "pppi": { label: "PP e PI", validade: 50, retirada: 35, envio: 10 },
-      "artesanos": { label: "Artesanos", validade: 35, retirada: 23, envio: 09 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
+      "artesanos": { label: "Artesanos", validade: 35, retirada: 23, envio: 9 },
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 0 }
     }
   },
   "linha3": {
@@ -15,7 +15,7 @@ const dadosProducao = {
     produtos: {
       "paesEspeciais": { label: "Pães Especiais", validade: 35, retirada: 23, envio: 10 }, 
       "paesintegraise12graos": { label: "Pão Integral Zero e 12 Grãos 350g", validade: 28, retirada: 19, envio: 10 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 0 }
     }
   },
   "bolleria": {
@@ -23,7 +23,7 @@ const dadosProducao = {
     produtos: {
       "brioche": { label: "Brioche", validade: 60, retirada: 45, envio: 10 }, 
       "artesanos": { label: "Artesanos", validade: 35, retirada: 23, envio: 10 },
-      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 00 }
+      "aparas": { label: "Aparas", validade: 15, retirada: 12, envio: 0 }
     }
   }
 };
@@ -55,7 +55,6 @@ const loteLinhaInferior = document.getElementById("loteLinhaInferior");
 const loteRetiradaGrande = document.getElementById("loteRetiradaGrande");
 const loteEnvioGrande = document.getElementById("loteEnvioGrande");
 
-
 const abaData = document.getElementById("abaData");
 const abaLote = document.getElementById("abaLote");
 
@@ -71,7 +70,7 @@ const inputFields = {
 const previousFields = {};
 Object.keys(inputFields).forEach(currentId => {
   const nextId = inputFields[currentId];
-  previousFields[nextId] = currentId; // O próximo campo agora aponta para o anterior
+  previousFields[nextId] = currentId;
 });
 
 document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -86,9 +85,8 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
       let targetId = null;
 
       if (e.shiftKey) {
-               targetId = previousFields[this.id];
+        targetId = previousFields[this.id];
       } else {
-        
         targetId = inputFields[this.id];
       }
 
@@ -107,8 +105,8 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
   });
 });
 
-
-document.getElementById('calcularMedias').addEventListener('click', calcularMedias);
+const btnCalcular = document.getElementById('calcularMedias');
+if(btnCalcular) btnCalcular.addEventListener('click', calcularMedias);
 
 function calcularMedias() {
     const obterValores = (pref) => [...Array(6)].map((_, i) => parseFloat(document.getElementById(`${pref}${i+1}`).value)).filter(v => !isNaN(v));
@@ -124,12 +122,17 @@ function calcularMedias() {
     const mQuente = quentes.reduce((a, b) => a + b, 0) / 6;
     const delta = mQuente - mFrio;
 
-    document.getElementById('mediaFrios').textContent = mFrio.toFixed(1);
-    document.getElementById('mediaQuentes').textContent = mQuente.toFixed(1);
+    if(document.getElementById('mediaFrios')) document.getElementById('mediaFrios').textContent = mFrio.toFixed(1);
+    if(document.getElementById('mediaQuentes')) document.getElementById('mediaQuentes').textContent = mQuente.toFixed(1);
+    
     const dSpan = document.getElementById('delta');
-    dSpan.textContent = delta.toFixed(1);
-    document.querySelector('.resultados').style.display = 'block';
-    dSpan.className = (delta < 25.0 || delta > 28.0) ? 'delta-vermelho' : 'delta-azul';
+    if(dSpan) {
+      dSpan.textContent = delta.toFixed(1);
+      dSpan.className = (delta < 25.0 || delta > 28.0) ? 'delta-vermelho' : 'delta-azul';
+    }
+    
+    const divResultados = document.querySelector('.resultados');
+    if(divResultados) divResultados.style.display = 'block';
 }
 
 /* ===========================================================
@@ -137,12 +140,16 @@ function calcularMedias() {
    =========================================================== */
 
 function popularSelectProdutos() {
+    if(!seletorLinha || !seletorProduto) return;
     const linha = seletorLinha.value;
-    const prods = dadosProducao[linha].produtos;
+    const prods = dadosProducao[linha]?.produtos;
+    if(!prods) return;
+
     seletorProduto.innerHTML = "";
     for (let chave in prods) {
         let opt = document.createElement("option");
-        opt.value = chave; opt.textContent = prods[chave].label;
+        opt.value = chave; 
+        opt.textContent = prods[chave].label;
         seletorProduto.appendChild(opt);
     }
     atualizarMaquinas();
@@ -150,20 +157,23 @@ function popularSelectProdutos() {
 }
 
 function atualizarMaquinas() {
+    if(!seletorLinha || !seletorMaquina) return;
     const linha = seletorLinha.value;
     seletorMaquina.innerHTML = "";
-    maquinasPorLinha[linha].forEach(m => {
-        let opt = document.createElement("option");
-        opt.value = m; opt.textContent = `Máquina ${m}`;
-        seletorMaquina.appendChild(opt);
-    });
+    if(maquinasPorLinha[linha]) {
+      maquinasPorLinha[linha].forEach(m => {
+          let opt = document.createElement("option");
+          opt.value = m; opt.textContent = `Máquina ${m}`;
+          seletorMaquina.appendChild(opt);
+      });
+    }
     gerarStringLote();
 }
 
 function atualizarCalculosDatas() {
     const hoje = new Date();
-    const linhaVal = seletorLinha.value;
-    const prodVal = seletorProduto.value;
+    const linhaVal = seletorLinha ? seletorLinha.value : "";
+    const prodVal = seletorProduto ? seletorProduto.value : "";
     
     if (!dadosProducao[linhaVal]?.produtos[prodVal]) return;
     const info = dadosProducao[linhaVal].produtos[prodVal];
@@ -172,29 +182,28 @@ function atualizarCalculosDatas() {
     const inicio = new Date(hoje.getFullYear(), 0, 0);
     const diff = hoje - inicio;
     const diaJuliano = Math.floor(diff / (1000 * 60 * 60 * 24));
-    dataJulianaSpan.textContent = diaJuliano.toString().padStart(3, '0');
+    if(dataJulianaSpan) dataJulianaSpan.textContent = diaJuliano.toString().padStart(3, '0');
 
     // Validade, Retirada e Envio
     const dVal = new Date(hoje); dVal.setDate(hoje.getDate() + info.validade);
     const dRet = new Date(hoje); dRet.setDate(hoje.getDate() + info.retirada);
     const dEnv = new Date(hoje); dEnv.setDate(hoje.getDate() + info.envio); 
     
-    dataHojeCompacta.textContent = hoje.toLocaleDateString("pt-BR");
-    document.getElementById("dataAtual").textContent = hoje.toLocaleDateString("pt-BR");
-    dataValidadeSpan.textContent = dVal.toLocaleDateString("pt-BR");
-    dataRetiradaSpan.textContent = dRet.getDate().toString().padStart(2, '0') + " " + (dRet.getMonth()+1).toString().padStart(2, '0');
-    dataEnvioSpan.textContent = dEnv.getDate().toString().padStart(2, '0') + " " + (dEnv.getMonth()+1).toString().padStart(2, '0');
+    if(dataHojeCompacta) dataHojeCompacta.textContent = hoje.toLocaleDateString("pt-BR");
+    if(document.getElementById("dataAtual")) document.getElementById("dataAtual").textContent = hoje.toLocaleDateString("pt-BR");
+    if(dataValidadeSpan) dataValidadeSpan.textContent = dVal.toLocaleDateString("pt-BR");
+    if(dataRetiradaSpan) dataRetiradaSpan.textContent = dRet.getDate().toString().padStart(2, '0') + " " + (dRet.getMonth()+1).toString().padStart(2, '0');
+    if(dataEnvioSpan) dataEnvioSpan.textContent = dEnv.getDate().toString().padStart(2, '0') + " " + (dEnv.getMonth()+1).toString().padStart(2, '0');
     
-    // Integração: Atualiza o lote sempre que a data/produto mudar
     gerarStringLote();
 }
 
 function gerarStringLote() {
     const hoje = new Date();
-    const linhaVal = seletorLinha.value;
-    const prodVal = seletorProduto.value;
-    const unidade = seletorUnidade.value;
-    const maq = seletorMaquina.value;
+    const linhaVal = seletorLinha ? seletorLinha.value : "";
+    const prodVal = seletorProduto ? seletorProduto.value : "";
+    const unidade = seletorUnidade ? seletorUnidade.value : "";
+    const maq = seletorMaquina ? seletorMaquina.value : "";
     
     if (!dadosProducao[linhaVal]?.produtos[prodVal]) return;
 
@@ -206,69 +215,74 @@ function gerarStringLote() {
     
     // Linha Inferior: L + UNIDADE + NUM_LINHA + JULIANA + HORA + MAQ
     const numLinha = linhaVal === "linha20k" ? "4" : (linhaVal === "linha3" ? "3" : "1");
-    const juliana = dataJulianaSpan.textContent;
+    const juliana = dataJulianaSpan ? dataJulianaSpan.textContent : "000";
     const hora = hoje.getHours().toString().padStart(2, '0') + hoje.getMinutes().toString().padStart(2, '0');
     const strLote = `L${unidade}${numLinha}${juliana}${hora}${maq}`;
 
-    // Retirada para o quadro grande
+    // Retirada e Envio para o quadro grande
     const dRet = new Date(hoje); dRet.setDate(hoje.getDate() + info.retirada);
     const strRetiradaGrande = `DR ${dRet.getDate().toString().padStart(2, '0') + (dRet.getMonth()+1).toString().padStart(2, '0')}`;
-const dEnv = new Date(hoje); dEnv.setDate(hoje.getDate() + info.envio);
+    const dEnv = new Date(hoje); dEnv.setDate(hoje.getDate() + info.envio);
     const strEnvioGrande = `DE ${dEnv.getDate().toString().padStart(2, '0') + (dEnv.getMonth()+1).toString().padStart(2, '0')}`;
 
-    loteLinhaSuperior.textContent = strVal;
-    loteLinhaInferior.textContent = strLote;
-    loteRetiradaGrande.textContent = strRetiradaGrande;
-    loteEnvioGrande.textContent = strEnvioGrande;
+    if(loteLinhaSuperior) loteLinhaSuperior.textContent = strVal;
+    if(loteLinhaInferior) loteLinhaInferior.textContent = strLote;
+    if(loteRetiradaGrande) loteRetiradaGrande.textContent = strRetiradaGrande;
+    if(loteEnvioGrande) loteEnvioGrande.textContent = strEnvioGrande;
 }
 
 /* ===========================================================
-   RELÓGIO E EVENTOS
-   =========================================================== */
-let diaAtualNaMemoria = new Date().getDate(); // <-- ADICIONE ESTA LINHA
+   RELÓGIO E EVENTOS
+   =========================================================== */
+let diaAtualNaMemoria = new Date().getDate();
 
 function atualizarRelogio() {
-    const agora = new Date(); // <-- MUDAMOS DE "new Date().toLocaleTimeString" PARA PEGAR O OBJETO COMPLETO
+    const agora = new Date();
+    const h = agora.toLocaleTimeString("pt-BR");
+    if(document.getElementById("horaEsquerda")) document.getElementById("horaEsquerda").textContent = h;
+    if(document.getElementById("horaDireita")) document.getElementById("horaDireita").textContent = h;
     
-    const h = agora.toLocaleTimeString("pt-BR");
-    if(document.getElementById("horaEsquerda")) document.getElementById("horaEsquerda").textContent = h;
-    if(document.getElementById("horaDireita")) document.getElementById("horaDireita").textContent = h;
-    
-    // VIGILANTE DE DATA: Se o dia virou com o programa aberto
     if (agora.getDate() !== diaAtualNaMemoria) {
         diaAtualNaMemoria = agora.getDate(); 
-        atualizarCalculosDatas(); // Atualiza tudo automaticamente!
+        atualizarCalculosDatas();
     } 
-    // Se o dia for o mesmo, mantém sua lógica original para o minuto do lote
     else if(agora.getSeconds() === 0) {
         gerarStringLote(); 
     }
 }
 setInterval(atualizarRelogio, 1000);
+
 // Eventos de Interface
-seletorLinha.addEventListener("change", popularSelectProdutos);
-seletorProduto.addEventListener("change", atualizarCalculosDatas);
-seletorMaquina.addEventListener("change", gerarStringLote);
-seletorUnidade.addEventListener("change", gerarStringLote);
+if(seletorLinha) seletorLinha.addEventListener("change", popularSelectProdutos);
+if(seletorProduto) seletorProduto.addEventListener("change", atualizarCalculosDatas);
+if(seletorMaquina) seletorMaquina.addEventListener("change", gerarStringLote);
+if(seletorUnidade) seletorUnidade.addEventListener("change", gerarStringLote);
 
 // Abrir/Fechar Painéis
-abaData.addEventListener("click", (e) => {
-    if(e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
-    abaData.classList.toggle("expandida");
-});
+if(abaData) {
+  abaData.addEventListener("click", (e) => {
+      if(e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+      abaData.classList.toggle("expandida");
+  });
+}
 
-abaLote.addEventListener("click", (e) => {
-    if(e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
-    abaLote.classList.toggle("expandida");
-    if (abaLote.classList.contains("expandida")) gerarStringLote();
-});
+if(abaLote) {
+  abaLote.addEventListener("click", (e) => {
+      if(e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+      abaLote.classList.toggle("expandida");
+      if (abaLote.classList.contains("expandida")) gerarStringLote();
+  });
+}
 
 // Dark Mode
-document.getElementById('toggleDarkMode').addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-});
+const btnDarkMode = document.getElementById('toggleDarkMode');
+if(btnDarkMode) {
+  btnDarkMode.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+  });
+}
 
-// Inicialização
+// Inicialização das funções
 popularSelectProdutos();
 atualizarRelogio();
 
@@ -277,76 +291,71 @@ atualizarRelogio();
    =========================================================== */
 
 function zerarTudo() {
-    // Limpa todos os 12 campos de input
     for (let i = 1; i <= 6; i++) {
-        document.getElementById(`frio${i}`).value = '';
-        document.getElementById(`quente${i}`).value = '';
+        const elFrio = document.getElementById(`frio${i}`);
+        const elQuente = document.getElementById(`quente${i}`);
+        if(elFrio) elFrio.value = '';
+        if(elQuente) elQuente.value = '';
     }
-    // Reseta a visualização
-    document.getElementById('mediaFrios').textContent = '';
-    document.getElementById('mediaQuentes').textContent = '';
+    if(document.getElementById('mediaFrios')) document.getElementById('mediaFrios').textContent = '';
+    if(document.getElementById('mediaQuentes')) document.getElementById('mediaQuentes').textContent = '';
     const dSpan = document.getElementById('delta');
-    dSpan.textContent = '';
-    dSpan.classList.remove('delta-vermelho', 'delta-azul');
-    document.querySelector('.resultados').style.display = 'none';
+    if(dSpan) {
+      dSpan.textContent = '';
+      dSpan.classList.remove('delta-vermelho', 'delta-azul');
+    }
+    const divRes = document.querySelector('.resultados');
+    if(divRes) divRes.style.display = 'none';
     
-    // Devolve o foco para o primeiro campo
-    document.getElementById('frio1').focus();
+    const primeiroInput = document.getElementById('frio1');
+    if(primeiroInput) primeiroInput.focus();
 }
 
 function zerarQuentes() {
-    // Limpa apenas os campos da coluna Quente
     for (let i = 1; i <= 6; i++) {
-        document.getElementById(`quente${i}`).value = '';
+        const elQuente = document.getElementById(`quente${i}`);
+        if(elQuente) elQuente.value = '';
     }
     
-    // Recalcula apenas a média dos frios para manter o painel atualizado
-    const valoresFrios = [...Array(6)].map((_, i) => parseFloat(document.getElementById(`frio${i + 1}`).value));
+    const valoresFrios = [...Array(6)].map((_, i) => parseFloat(document.getElementById(`frio${i + 1}`)?.value));
     
     if (valoresFrios.some(isNaN)) {
-        document.getElementById('mediaFrios').textContent = '';
-        document.querySelector('.resultados').style.display = 'none';
+        if(document.getElementById('mediaFrios')) document.getElementById('mediaFrios').textContent = '';
+        const divRes = document.querySelector('.resultados');
+        if(divRes) divRes.style.display = 'none';
     } else {
         const mediaFrios = valoresFrios.reduce((sum, num) => sum + num, 0) / 6;
-        document.getElementById('mediaFrios').textContent = mediaFrios.toFixed(1);
+        if(document.getElementById('mediaFrios')) document.getElementById('mediaFrios').textContent = mediaFrios.toFixed(1);
     }
 
-    document.getElementById('mediaQuentes').textContent = '';
+    if(document.getElementById('mediaQuentes')) document.getElementById('mediaQuentes').textContent = '';
     const dSpan = document.getElementById('delta');
-    dSpan.textContent = '';
-    dSpan.classList.remove('delta-vermelho', 'delta-azul');
+    if(dSpan) {
+      dSpan.textContent = '';
+      dSpan.classList.remove('delta-vermelho', 'delta-azul');
+    }
     
-    // Devolve o foco para o primeiro campo quente
-    document.getElementById('quente1').focus();
+    const primeiroQuente = document.getElementById('quente1');
+    if(primeiroQuente) primeiroQuente.focus();
 }
 
-// Vinculando os botões (Caso seu HTML não tenha o 'onclick')
-// Se os IDs dos seus botões forem diferentes, ajuste aqui:
 const btnZerarTudo = document.getElementById('btnZerarTudo');
 const btnZerarQuentes = document.getElementById('btnZerarQuentes');
 
 if(btnZerarTudo) btnZerarTudo.addEventListener('click', zerarTudo);
 if(btnZerarQuentes) btnZerarQuentes.addEventListener('click', zerarQuentes);
 
-// Oculta a Splash Screen com transição direta inline
-(function controlarSplashScreen() {
-  function fecharSplash() {
-    const splash = document.getElementById('splash-screen');
+/* ===========================================================
+   CONTROLE DA SPLASH SCREEN (AUTOOEXECUTÁVEL E SEGURA)
+   =========================================================== */
+(function() {
+  setTimeout(function() {
+    var splash = document.getElementById('splash-screen');
     if (splash) {
       splash.style.opacity = '0';
-      // Aguarda 500ms da animação de opacidade para remover o elemento da tela
-      setTimeout(() => {
+      setTimeout(function() {
         splash.style.display = 'none';
       }, 500);
     }
-  }
-
-  // Conta 2 segundos (2000ms) após o carregamento
-  if (document.readyState === 'complete') {
-    setTimeout(fecharSplash, 2000);
-  } else {
-    window.addEventListener('load', () => {
-      setTimeout(fecharSplash, 2000);
-    });
-  }
+  }, 2000); // 2 segundos de exibição
 })();
