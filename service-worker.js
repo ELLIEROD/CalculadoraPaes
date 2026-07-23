@@ -1,5 +1,5 @@
-// 1. Subimos para v5 para forçar o descarte da v4 e atualizar os ícones
-const CACHE_NAME = 'temp-paes-v5';
+// Subimos para v6 para invalidar o cache antigo
+const CACHE_NAME = 'temp-paes-v6';
 
 const assets = [
   './',
@@ -37,19 +37,15 @@ self.addEventListener('activate', event => {
 
 // Estratégia "Cache First" com fallback para rede
 self.addEventListener('fetch', event => {
-  // Ignora requisições de outras origens (extensões, analytics, etc)
   if (!event.request.url.startsWith(self.location.origin)) return;
 
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      // 1. Se estiver no cache, entrega IMEDIATAMENTE
       if (cachedResponse) {
         return cachedResponse;
       }
 
-      // 2. Se não estiver no cache, tenta buscar na rede
       return fetch(event.request).then(response => {
-        // Se a resposta for válida, salva uma cópia no cache para a próxima vez
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
