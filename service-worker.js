@@ -1,5 +1,5 @@
 // Subimos para v6 para invalidar o cache antigo
-const CACHE_NAME = 'temp-paes-v6';
+const CACHE_NAME = 'temp-paes-v7';
 
 const assets = [
   './',
