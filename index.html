@@ -10,14 +10,40 @@
 </head>
 <body>
 
-  <!-- Tela de Abertura (Splash Screen) -->
-<div id="splash-screen">
-  <div class="splash-content">
-    <img src="./img/icon-512.png" alt="Logo" class="splash-logo">
-    <h1 class="splash-title">Calculadora de temperatura e Delta</h1>
-    <p class="splash-slogan">Bem vindo! Faça o controle de temperatura de 20 em 20 minutos.</p>
+  <!-- TELA DE ABERTURA (SPLASH SCREEN RESPONSIVA) -->
+<div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0f172a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999999; font-family: system-ui, -apple-system, sans-serif; transition: opacity 0.5s ease-out;">
+  <div style="text-align: center; color: #ffffff; padding: 20px; width: 100%; max-width: 500px;">
+    
+    <!-- ÍCONE RESPONSIVO: Cresce no PC (até 220px) e se ajusta perfeito no celular -->
+    <img src="./img/icon-512.png" alt="Logo" style="width: min(40vw, 28vh); height: auto; max-width: 220px; object-fit: contain; margin: 0 auto 20px auto; display: block;">
+    
+    <!-- TÍTULO E SUBTÍTULO COM FONTE ADAPTÁVEL -->
+    <h1 style="font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight: 800; color: #ffffff; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: -0.5px;">Qualidade & Segregação</h1>
+    <p style="font-size: clamp(0.85rem, 1.2vw, 1.1rem); color: #94a3b8; margin: 0; font-weight: 400;">Controle e Monitoramento QA</p>
   </div>
 </div>
+
+
+  <!-- Conteúdo principal do seu App -->
+  <div class="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md border-t-8 border-red-600 relative overflow-hidden">
+    <!-- ... restante do seu código ... -->
+  </div>
+
+<!-- Coloque este script logo abaixo da <div id="splash-screen"> no seu HTML -->
+<script>
+  (function() {
+    // Garante a exibição do splash imediatamente
+    setTimeout(function() {
+      var splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          splash.style.display = 'none';
+        }, 500); // 500ms para concluir o fade-out
+      }
+    }, 2000); // 2000ms = 2 segundos de exibição
+  })();
+</script>
   
   <div class="watermark-background"></div>
 
