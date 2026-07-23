@@ -1,4 +1,6 @@
-const CACHE_NAME = 'temp-paes-v4'; // Versão nova para limpar o erro anterior
+// 1. Subimos para v5 para forçar o descarte da v4 e atualizar os ícones
+const CACHE_NAME = 'temp-paes-v5';
+
 const assets = [
   './',
   './index.html',
@@ -7,7 +9,8 @@ const assets = [
   './manifest.json',
   './img/background.jfif',
   './img/bimbo2.png',
-  './img/ico-192.png'
+  './img/ico-192.png',
+  './img/ico-512.png'
 ];
 
 // Instalação - Salva tudo no cache imediatamente
@@ -32,7 +35,7 @@ self.addEventListener('activate', event => {
   return self.clients.claim();
 });
 
-// O SEGREDO: Estratégia "Cache First" com fallback para rede
+// Estratégia "Cache First" com fallback para rede
 self.addEventListener('fetch', event => {
   // Ignora requisições de outras origens (extensões, analytics, etc)
   if (!event.request.url.startsWith(self.location.origin)) return;
